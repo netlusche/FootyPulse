@@ -14,9 +14,9 @@ Entwickelt mit **Vanilla JavaScript**, **HTML5** und **CSS3** – ohne externe F
     *   🕒 **Verlauf**: Automatische Liste der zuletzt angesehenen Teams.
 *   **Datenquelle**: Nutzt die kostenlose [OpenLigaDB API](https://api.openligadb.de/).
 *   **Unterstützte Ligen**:
-    1. Fußball Bundesliga Deutschland
-    2. Fußball Bundesliga Deutschland
-    3. Fußball Bundesliga Deutschland
+    - 1.Fußball Bundesliga Deutschland
+    - 2.Fußball Bundesliga Deutschland
+    - 3.Fußball Bundesliga Deutschland
 
 ## 🚀 Installation & Start
 
