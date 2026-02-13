@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fußball Explorer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="container">
+                <h1>⚽ Fußball Explorer</h1>
+                <div class="search-container">
+                    <input type="text" id="team-search" placeholder="Verein suchen..." autocomplete="off">
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <div id="dashboard" class="dashboard">
+                <!-- Sidebar: Favorites & Recents -->
+                <aside class="sidebar">
+                    <section id="favorites-section">
+                        <h2>⭐ Favoriten</h2>
+                        <div id="favorites-list" class="team-list">
+                            <p class="empty-state">Noch keine Favoriten gespeichert.</p>
+                        </div>
+                    </section>
+                    <section id="recents-section">
+                        <h2>🕒 Zuletzt angesehen</h2>
+                        <div id="recents-list" class="team-list">
+                            <p class="empty-state">Noch keine Vereine angesehen.</p>
+                        </div>
+                    </section>
+                </aside>
+
+                <!-- Main Content: Team Details -->
+                <section id="content-area" class="content-area hidden">
+                    <div id="team-header" class="team-header">
+                        <div class="team-info">
+                            <img id="team-logo" src="" alt="Team Logo" class="team-logo">
+                            <h2 id="team-name">Team Name</h2>
+                            <button id="btn-favorite" class="btn-icon" aria-label="Zu Favoriten hinzufügen">
+                                <span class="icon">☆</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid-layout">
+                        <!-- Last 10 Matches -->
+                        <div class="card matches-card">
+                            <h3>Letzte 10 Spiele</h3>
+                            <div id="matches-list" class="matches-list">
+                                <!-- Example Match Item -->
+                                <!-- <div class="match-item win">
+                                    <div class="match-date">12.05.2024</div>
+                                    <div class="match-teams">
+                                        <span class="home">Bayern</span> vs <span class="away">Dortmund</span>
+                                    </div>
+                                    <div class="match-result">3:1</div>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- League Table -->
+                        <div class="card table-card">
+                            <h3>Tabelle</h3>
+                            <div class="table-container">
+                                <table id="league-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Team</th>
+                                            <th class="mobile-hide">Sp</th>
+                                            <th class="mobile-hide">Tore</th>
+                                            <th>Pkt</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Table Rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="loading" class="loading hidden">
+                     <div class="spinner"></div>
+                     <p>Daten werden geladen...</p>
+                </div>
+                
+                <div id="error-message" class="error-message hidden">
+                    <p id="error-text"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
