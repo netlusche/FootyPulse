@@ -50,7 +50,14 @@ Da es sich um eine reine statische Web-App handelt, ist keine komplexe Installat
 *   **State Management**: Eigener Store (basierend auf `localStorage`)
 *   **API**: `fetch` API mit Caching-Layer
 
-## 📄 Lizenz
+## 📄 Lizenz & Rechtliches
 
-MIT License.
-Daten bereitgestellt von OpenLigaDB.
+**Quellcode:**  
+Der Quellcode dieses Projekts ist unter der **MIT License** veröffentlicht. Das bedeutet, du kannst den Code frei für eigene Projekte verwenden, verändern und verbreiten.
+
+**Daten:**  
+Die Fußball-Daten werden von der **[OpenLigaDB API](https://api.openligadb.de/)** bereitgestellt.  
+Diese Daten stehen in der Regel unter der **Open Database License (ODbL)**.  
+Bitte beachte die Nutzungsbedingungen von OpenLigaDB bei der Verwendung der Daten.
+
+*Dieses Projekt steht in keiner direkten Verbindung zu OpenLigaDB oder den DFL/DFB-Verbänden.*
