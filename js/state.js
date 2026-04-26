@@ -4,10 +4,11 @@
  */
 
 const STATE_KEYS = {
-    TEAMS_INDEX: 'football_app_teams_index_v2', // Bump version to invalidate old cache
-    FAVORITES: 'football_app_favorites',
-    RECENTS: 'football_app_recents',
-    CACHE_PREFIX: 'football_app_cache_'
+    TEAMS_INDEX: 'footypulse_teams_index_v2',
+    FAVORITES: 'footypulse_favorites',
+    RECENTS: 'footypulse_recents',
+    THEME: 'footypulse_theme',
+    CACHE_PREFIX: 'footypulse_cache_'
 };
 
 const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
@@ -16,11 +17,24 @@ export const state = {
     favorites: [],
     recents: [],
     teamsIndex: [], // Array of { teamId, teamName, leagueShortcut, leagueSeason }
+    theme: 'light',
 
     init() {
         this.loadFavorites();
         this.loadRecents();
         this.loadTeamsIndex();
+        this.loadTheme();
+    },
+
+    // --- Theme ---
+    loadTheme() {
+        const stored = localStorage.getItem(STATE_KEYS.THEME);
+        this.theme = stored || 'light';
+    },
+
+    saveTheme(theme) {
+        this.theme = theme;
+        localStorage.setItem(STATE_KEYS.THEME, theme);
     },
 
     // --- Favorites ---

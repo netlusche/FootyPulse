@@ -5,16 +5,20 @@ import { api } from './api.js';
 import { state } from './state.js';
 import { render } from './render.js';
 
-// DOM Elements
-const searchInput = document.getElementById('team-search');
-const searchResultsContainer = document.getElementById('search-results');
-const favoritesContainer = document.getElementById('favorites-list');
-const recentsContainer = document.getElementById('recents-list');
-const favBtn = document.getElementById('btn-favorite');
+let searchInput, searchResultsContainer, favoritesContainer, recentsContainer, favBtn, themeSelect;
 let currentTeam = null;
 
 async function init() {
+    // Initialize DOM references
+    searchInput = document.getElementById('team-search');
+    searchResultsContainer = document.getElementById('search-results');
+    favoritesContainer = document.getElementById('favorites-list');
+    recentsContainer = document.getElementById('recents-list');
+    favBtn = document.getElementById('btn-favorite');
+    themeSelect = document.getElementById('theme-select');
+
     state.init();
+    initTheme();
     renderSidebar();
 
     // Initial Data Load
@@ -37,7 +41,22 @@ function renderSidebar() {
     render.teamList(state.recents, recentsContainer, loadTeamDetails);
 }
 
+function initTheme() {
+    const theme = state.theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    themeSelect.value = theme;
+}
+
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    // Theme Select
+    themeSelect.addEventListener('change', (e) => {
+        const newTheme = e.target.value;
+        console.log('Switching theme to:', newTheme);
+        state.saveTheme(newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+    });
+
     // Search Input
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();

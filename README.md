@@ -1,4 +1,4 @@
-# favteam - Der Fußball-Explorer ⚽️
+# FootyPulse - Der Fußball-Explorer ⚽️
 
 Eine moderne, responsive Single-Page-Webanwendung (SPA) zur Erkundung von Fußball-Daten der deutschen Bundesligen.
 Entwickelt mit **Vanilla JavaScript**, **HTML5** und **CSS3** – ohne externe Frameworks.

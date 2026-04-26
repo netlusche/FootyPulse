@@ -174,16 +174,14 @@ export const render = {
             }
 
             tr.innerHTML = `
-                <td>${index + 1}.</td>
-                <td>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <img src="${row.teamIconUrl}" style="width:20px; height:20px; object-fit:contain;" alt="">
-                        ${row.teamName}
-                    </div>
+                <td>${index + 1}</td>
+                <td class="team-cell">
+                    <img src="${row.teamIconUrl}" alt="">
+                    <span>${row.teamName}</span>
                 </td>
                 <td class="mobile-hide">${row.matches}</td>
                 <td class="mobile-hide">${row.goals}:${row.opponentGoals}</td>
-                <td><strong>${row.points}</strong></td>
+                <td class="points-cell">${row.points}</td>
             `;
             tbody.appendChild(tr);
         });
