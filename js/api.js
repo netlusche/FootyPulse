@@ -93,16 +93,24 @@ export const api = {
         // /getmatchdata/{leagueShortcut}/{leagueSeason}
         const allMatches = await fetchWithCache(`/getmatchdata/${team.leagueShortcut}/${team.leagueSeason}`);
 
-        // Filter for this team
+        // Filter all matches for this team
         const teamMatches = allMatches.filter(m =>
-            (m.team1.teamId === team.teamId || m.team2.teamId === team.teamId) &&
-            m.matchIsFinished === true
+            m.team1.teamId === team.teamId || m.team2.teamId === team.teamId
         );
 
-        // Sort by date desc
-        teamMatches.sort((a, b) => new Date(b.matchDateTime) - new Date(a.matchDateTime));
+        // Classification
+        const pastMatches = teamMatches
+            .filter(m => m.matchIsFinished === true)
+            .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime)); // Ascending for slicing
 
-        return teamMatches.slice(0, 10);
+        const futureMatches = teamMatches
+            .filter(m => m.matchIsFinished === false)
+            .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime));
+
+        return {
+            lastMatches: pastMatches.slice(-10), // Take the latest 10 finished
+            nextMatches: futureMatches.slice(0, 10) // Take the next 10 upcoming
+        };
     },
 
     async getLeagueTable(leagueShortcut, leagueSeason) {

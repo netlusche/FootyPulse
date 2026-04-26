@@ -68,49 +68,99 @@ export const render = {
         favBtn.setAttribute('aria-label', isFavorite ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen');
     },
 
-    matches(matches, teamId) {
-        const container = document.getElementById('matches-list');
-        container.innerHTML = '';
+    matches(matchData, teamId) {
+        const { lastMatches, nextMatches } = matchData;
+        const lastContainer = document.getElementById('matches-list');
+        const nextContainer = document.getElementById('next-matches-list');
+        const nextTitle = document.getElementById('next-matches-title');
+        const formContainer = document.getElementById('form-display');
 
-        if (matches.length === 0) {
-            container.innerHTML = '<p class="empty-state">Keine Spiele gefunden.</p>';
-            return;
+        lastContainer.innerHTML = '';
+        nextContainer.innerHTML = '';
+        formContainer.innerHTML = '';
+
+        // --- Render Last Matches & Form ---
+        if (lastMatches.length === 0) {
+            lastContainer.innerHTML = '<p class="empty-state">Keine Spiele gefunden.</p>';
+        } else {
+            // Sort for UI (descending)
+            const sortedLast = [...lastMatches].reverse();
+            
+            sortedLast.forEach(match => {
+                const item = this.createMatchItem(match, teamId);
+                lastContainer.appendChild(item);
+            });
+
+            // Compact Form Display (Chronological: oldest to newest)
+            lastMatches.forEach(match => {
+                const result = this.calculateResult(match, teamId);
+                const span = document.createElement('span');
+                span.className = `form-pill ${result}`;
+                span.textContent = result.charAt(0).toUpperCase();
+                formContainer.appendChild(span);
+            });
         }
 
-        matches.forEach(match => {
-            const isHome = match.team1.teamId === teamId;
-            const opponent = isHome ? match.team2.teamName : match.team1.teamName;
-            const myScore = isHome ? match.matchResults[1]?.pointsTeam1 : match.matchResults[1]?.pointsTeam2; // matchResults[1] is usually end result
-            const opScore = isHome ? match.matchResults[1]?.pointsTeam2 : match.matchResults[1]?.pointsTeam1;
+        // --- Render Next Matches ---
+        if (nextMatches.length === 0) {
+            nextTitle.classList.add('hidden');
+            nextContainer.classList.add('hidden');
+        } else {
+            nextTitle.classList.remove('hidden');
+            nextContainer.classList.remove('hidden');
+            
+            // Title logic
+            nextTitle.textContent = nextMatches.length >= 10 ? 'Nächste Spiele' : 'Restprogramm';
 
-            // Fallback for results if matchResults[1] undefined (sometimes index varies)
-            // Ideally we check ResultName usually "Endergebnis"
+            nextMatches.forEach(match => {
+                const item = this.createMatchItem(match, teamId, false);
+                nextContainer.appendChild(item);
+            });
+        }
+    },
+
+    createMatchItem(match, teamId, isFinished = true) {
+        const isHome = match.team1.teamId === teamId;
+        const opponent = isHome ? match.team2.teamName : match.team1.teamName;
+        
+        let resultHtml = '-:-';
+        let resultClass = 'upcoming';
+
+        if (isFinished) {
             const finalResult = match.matchResults.find(r => r.resultName === "Endergebnis") || match.matchResults[0];
             const homePoints = finalResult?.pointsTeam1;
             const guestPoints = finalResult?.pointsTeam2;
+            resultHtml = `${homePoints}:${guestPoints}`;
+            
+            const res = this.calculateResult(match, teamId);
+            resultClass = res;
+        }
 
-            const myPoints = isHome ? homePoints : guestPoints;
-            const opPoints = isHome ? guestPoints : homePoints;
-
-            let resultClass = 'draw';
-            if (myPoints > opPoints) resultClass = 'win';
-            if (myPoints < opPoints) resultClass = 'loss';
-
-            const date = new Date(match.matchDateTime).toLocaleDateString('de-DE', {
-                day: '2-digit', month: '2-digit'
-            });
-
-            const div = document.createElement('div');
-            div.className = `match-item ${resultClass}`;
-            div.innerHTML = `
-                <div class="match-date">${date}</div>
-                <div class="match-teams">
-                    ${isHome ? 'vs.' : '@'} ${opponent}
-                </div>
-                <div class="match-result">${homePoints}:${guestPoints}</div>
-            `;
-            container.appendChild(div);
+        const date = new Date(match.matchDateTime).toLocaleDateString('de-DE', {
+            day: '2-digit', month: '2-digit'
         });
+
+        const div = document.createElement('div');
+        div.className = `match-item ${resultClass}`;
+        div.innerHTML = `
+            <div class="match-date">${date}</div>
+            <div class="match-teams">
+                ${isHome ? 'vs.' : '@'} ${opponent}
+            </div>
+            <div class="match-result">${resultHtml}</div>
+        `;
+        return div;
+    },
+
+    calculateResult(match, teamId) {
+        const isHome = match.team1.teamId === teamId;
+        const finalResult = match.matchResults.find(r => r.resultName === "Endergebnis") || match.matchResults[0];
+        const myPoints = isHome ? finalResult?.pointsTeam1 : finalResult?.pointsTeam2;
+        const opPoints = isHome ? finalResult?.pointsTeam2 : finalResult?.pointsTeam1;
+
+        if (myPoints > opPoints) return 'win';
+        if (myPoints < opPoints) return 'loss';
+        return 'draw';
     },
 
     table(tableData, teamId) {
