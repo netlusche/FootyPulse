@@ -218,9 +218,7 @@ export const render = {
 
     showContentArea() {
         document.getElementById('content-area').classList.remove('hidden');
-        // Mobile UX: scroll to content
-        if (window.innerWidth < 768) {
-            document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
-        }
+        // Ensure user is at the top to see header and brand
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
