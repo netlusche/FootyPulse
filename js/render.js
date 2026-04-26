@@ -68,7 +68,7 @@ export const render = {
         favBtn.setAttribute('aria-label', isFavorite ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen');
     },
 
-    matches(matchData, teamId) {
+    matches(matchData, teamId, onTeamClick) {
         const { lastMatches, nextMatches } = matchData;
         const lastContainer = document.getElementById('matches-list');
         const nextContainer = document.getElementById('next-matches-list');
@@ -87,7 +87,7 @@ export const render = {
             const sortedLast = [...lastMatches].reverse();
             
             sortedLast.forEach(match => {
-                const item = this.createMatchItem(match, teamId);
+                const item = this.createMatchItem(match, teamId, true, onTeamClick);
                 lastContainer.appendChild(item);
             });
 
@@ -113,15 +113,15 @@ export const render = {
             nextTitle.textContent = nextMatches.length >= 10 ? 'Nächste Spiele' : 'Restprogramm';
 
             nextMatches.forEach(match => {
-                const item = this.createMatchItem(match, teamId, false);
+                const item = this.createMatchItem(match, teamId, false, onTeamClick);
                 nextContainer.appendChild(item);
             });
         }
     },
 
-    createMatchItem(match, teamId, isFinished = true) {
+    createMatchItem(match, teamId, isFinished = true, onTeamClick = null) {
         const isHome = match.team1.teamId === teamId;
-        const opponent = isHome ? match.team2.teamName : match.team1.teamName;
+        const opponent = isHome ? match.team2 : match.team1;
         
         let resultHtml = '-:-';
         let resultClass = 'upcoming';
@@ -145,10 +145,16 @@ export const render = {
         div.innerHTML = `
             <div class="match-date">${date}</div>
             <div class="match-teams">
-                ${isHome ? 'vs.' : '@'} ${opponent}
+                ${isHome ? 'vs.' : '@'} <span class="clickable-team">${opponent.teamName}</span>
             </div>
             <div class="match-result">${resultHtml}</div>
         `;
+
+        if (onTeamClick) {
+            const span = div.querySelector('.clickable-team');
+            span.addEventListener('click', () => onTeamClick(opponent.teamId));
+        }
+
         return div;
     },
 
@@ -163,7 +169,7 @@ export const render = {
         return 'draw';
     },
 
-    table(tableData, teamId) {
+    table(tableData, teamId, onTeamClick = null) {
         const tbody = document.querySelector('#league-table tbody');
         tbody.innerHTML = '';
 
@@ -177,12 +183,17 @@ export const render = {
                 <td>${index + 1}</td>
                 <td class="team-cell">
                     <img src="${row.teamIconUrl}" alt="">
-                    <span>${row.teamName}</span>
+                    <span class="clickable-team">${row.teamName}</span>
                 </td>
                 <td class="mobile-hide">${row.matches}</td>
                 <td class="mobile-hide">${row.goals}:${row.opponentGoals}</td>
                 <td class="points-cell">${row.points}</td>
             `;
+
+            if (onTeamClick) {
+                tr.querySelector('.clickable-team').addEventListener('click', () => onTeamClick(row.teamInfoId));
+            }
+
             tbody.appendChild(tr);
         });
     },

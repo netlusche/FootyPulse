@@ -119,14 +119,23 @@ async function loadTeamDetails(team) {
             api.getLeagueTable(team.leagueShortcut, team.leagueSeason)
         ]);
 
-        render.matches(matches, team.teamId);
-        render.table(table, team.teamId);
+        render.matches(matches, team.teamId, navigateToTeam);
+        render.table(table, team.teamId, navigateToTeam);
 
     } catch (err) {
         console.error('Load details error:', err);
         render.showError('Daten konnten nicht geladen werden.');
     } finally {
         render.showLoading(false);
+    }
+}
+
+function navigateToTeam(teamId) {
+    const team = state.teamsIndex.find(t => t.teamId === teamId);
+    if (team) {
+        loadTeamDetails(team);
+    } else {
+        console.warn('Team not found in index:', teamId);
     }
 }
 
